@@ -1,0 +1,20 @@
+{
+    "name": "machinacyfrowa/corny-api",
+    "description": "Simple API project serving corny jokes. API is supposed to feed an .NET MAUI powered client app.",
+    "type": "project",
+    "require": {
+        "vlucas/phpdotenv": "^5.6",
+        "steampixel/simple-php-router": "^0.7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Machinacyfrowa\\CornyApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Paweł Zawadzki",
+            "email": "admin@machinacyfrowa.pl"
+        }
+    ]
+}
