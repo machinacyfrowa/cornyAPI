@@ -1,23 +1,31 @@
 <?php
-//Autoloader od composera - odpowiada za automatyczne ładowanie klas zainstalowanych przez composera oraz naszych klas z katalogu src
+//Requite composer autoloader to load all classes from our namespace and imported packages
 require_once('vendor/autoload.php'); 
-//Importujemy klasy z naszego namespace i namespace Steampixel
+//Import namespaces to use classes from them
 use Steampixel\Route;
 use Machinacyfrowa\CornyApi\Joke;
 
-//Wczytujemy zmienne z pliku .env
+//Read .env file and load variables
+//we use whole namespace since we did not import Dotenv class earlier
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-//Tworzymy połączenie z bazą danych - używamy zmienne z pliku .env
+//Create a database connection - use credentials from .env file
 $db = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
-//dodajemy najprostszą ścieżkę - pobieranie losowego żartu z bazy danych i zwracanie go w formacie JSON
+//add a simple example route - fetch a ranom joke from database and return it as json
 Route::add('/random', function() use($db){
     header('Content-Type: application/json');
-    return json_encode(['joke' => Joke::getRandom()]);
+    return json_encode(['joke' => Joke::getRandom($db)]);
 });
-//Zamykamy połączenie z bazą danych
-$db->close();
-//Uruchamiamy router
+//add a second route - fetch the latest joke from database and return it as json
+Route::add('/latest', function() use($db){
+    header('Content-Type: application/json');
+    return json_encode(['joke' => Joke::getLatest($db)]);
+});
+
+//Start up the router
 Route::run($_ENV['REWRITE_BASE']);
+
+//close the database connection
+$db->close();
 ?>
